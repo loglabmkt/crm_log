@@ -14,6 +14,7 @@ import Support from '@/pages/Support';
 import Reports from '@/pages/Reports';
 import SettingsPage from '@/pages/SettingsPage';
 import OpportunityDetail from '@/pages/OpportunityDetail';
+import TicketDetail from '@/pages/TicketDetail';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -49,6 +50,7 @@ const AuthenticatedApp = () => {
         <Route path="/sales/:id" element={<OpportunityDetail />} />
         <Route path="/marketing" element={<Marketing />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/support/:id" element={<TicketDetail />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>
