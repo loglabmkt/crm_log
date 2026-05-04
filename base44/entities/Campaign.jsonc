@@ -1,0 +1,60 @@
+{
+  "name": "Campaign",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome da campanha"
+    },
+    "segment_id": {
+      "type": "string",
+      "description": "ID do segmento vinculado"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "email",
+        "whatsapp",
+        "sms"
+      ],
+      "description": "Canal da campanha"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "programada",
+        "ativa",
+        "pausada",
+        "finalizada"
+      ],
+      "default": "rascunho",
+      "description": "Status da campanha"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Assunto (para e-mail)"
+    },
+    "body": {
+      "type": "string",
+      "description": "Conte\u00fado da mensagem"
+    },
+    "scheduled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora programada para envio"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora do envio efetivo"
+    },
+    "stats": {
+      "type": "object",
+      "description": "Estat\u00edsticas da campanha (sent, opened, clicked, replied, opportunities_generated)"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

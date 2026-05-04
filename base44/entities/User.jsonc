@@ -1,0 +1,28 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "manager",
+        "sales",
+        "support",
+        "marketing"
+      ],
+      "default": "sales",
+      "description": "Papel do usu\u00e1rio no sistema"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "URL da foto de perfil"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Indica se o usu\u00e1rio est\u00e1 ativo"
+    }
+  },
+  "required": []
+}

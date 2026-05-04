@@ -1,0 +1,57 @@
+{
+  "name": "Activity",
+  "type": "object",
+  "properties": {
+    "opportunity_id": {
+      "type": "string",
+      "description": "ID da oportunidade vinculada"
+    },
+    "ticket_id": {
+      "type": "string",
+      "description": "ID do ticket vinculado"
+    },
+    "organization_id": {
+      "type": "string",
+      "description": "ID da organiza\u00e7\u00e3o"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID do usu\u00e1rio que registrou"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "ligacao",
+        "email",
+        "reuniao",
+        "anotacao",
+        "whatsapp",
+        "visita",
+        "outro"
+      ],
+      "description": "Tipo de atividade"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo da atividade"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o detalhada"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora da ocorr\u00eancia"
+    },
+    "next_followup_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora do pr\u00f3ximo follow-up"
+    }
+  },
+  "required": [
+    "title",
+    "type"
+  ]
+}

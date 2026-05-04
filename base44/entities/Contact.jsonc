@@ -1,0 +1,48 @@
+{
+  "name": "Contact",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "ID da organiza\u00e7\u00e3o vinculada"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome do contato"
+    },
+    "role_title": {
+      "type": "string",
+      "description": "Cargo do contato"
+    },
+    "email": {
+      "type": "string",
+      "description": "E-mail do contato"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefone"
+    },
+    "whatsapp": {
+      "type": "string",
+      "description": "WhatsApp"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Contato principal da organiza\u00e7\u00e3o"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Contato ativo"
+    }
+  },
+  "required": [
+    "organization_id",
+    "name"
+  ]
+}

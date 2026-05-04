@@ -1,0 +1,44 @@
+{
+  "name": "Proposal",
+  "type": "object",
+  "properties": {
+    "opportunity_id": {
+      "type": "string",
+      "description": "ID da oportunidade vinculada"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo da proposta"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "rascunho",
+        "enviada",
+        "em_analise",
+        "aprovada",
+        "rejeitada",
+        "aguardando_resultado"
+      ],
+      "default": "rascunho",
+      "description": "Status da proposta"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL do documento da proposta"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Data/hora do envio"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Observa\u00e7\u00f5es"
+    }
+  },
+  "required": [
+    "opportunity_id",
+    "title"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "TicketMessage",
+  "type": "object",
+  "properties": {
+    "ticket_id": {
+      "type": "string",
+      "description": "ID do ticket vinculado"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID do usu\u00e1rio autor"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "resposta",
+        "anotacao_interna",
+        "mudanca_status",
+        "ligacao_registrada"
+      ],
+      "description": "Tipo da mensagem"
+    },
+    "content": {
+      "type": "string",
+      "description": "Conte\u00fado da mensagem"
+    },
+    "is_internal": {
+      "type": "boolean",
+      "default": false,
+      "description": "Vis\u00edvel apenas para a equipe"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lista de URLs de arquivos anexados"
+    }
+  },
+  "required": [
+    "ticket_id",
+    "content"
+  ]
+}
