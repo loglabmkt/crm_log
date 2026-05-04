@@ -1,68 +1,54 @@
 import React, { useState } from "react";
-import GlassCard from "@/components/ui/GlassCard";
-import { TrendingUp, Megaphone, Headphones } from "lucide-react";
+import { Download } from "lucide-react";
+import PeriodFilter, { getPeriodRange } from "@/components/dashboard/PeriodFilter";
+import SalesReport from "@/components/reports/SalesReport";
+import MarketingReport from "@/components/reports/MarketingReport";
+import SupportReport from "@/components/reports/SupportReport";
 
-const tabs = [
-  { key: "sales", label: "Vendas", icon: TrendingUp },
-  { key: "marketing", label: "Marketing", icon: Megaphone },
-  { key: "support", label: "Atendimento", icon: Headphones },
+const TABS = [
+  { key: "sales", label: "Vendas" },
+  { key: "marketing", label: "Marketing" },
+  { key: "support", label: "Atendimento" },
 ];
-
-const reportSections = {
-  sales: [
-    { title: "Oportunidades por Estágio" },
-    { title: "Receita por Período" },
-  ],
-  marketing: [
-    { title: "Performance de Campanhas" },
-    { title: "Segmentos Ativos" },
-  ],
-  support: [
-    { title: "Tickets por Status" },
-    { title: "Tempo Médio de Resolução" },
-  ],
-};
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState("sales");
+  const [periodState, setPeriodState] = useState({ period: "month", customRange: {} });
+  const periodRange = getPeriodRange(periodState.period, periodState.customRange);
 
   return (
-    <div className="space-y-6">
-      {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: "rgba(255,255,255,0.60)", border: "1px solid rgba(255,255,255,0.90)" }}>
-        {tabs.map((tab) => {
-          const active = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-              style={{
-                background: active ? "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)" : "transparent",
-                color: active ? "#1A1A1A" : "#555555",
-                boxShadow: active ? "0 2px 8px rgba(240,192,0,0.30)" : "none",
-              }}
-            >
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          );
-        })}
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-center gap-4 flex-wrap">
+        <h1 className="font-bold" style={{ color:"#1A1A1A", fontSize:28 }}>Relatórios</h1>
+        <div className="flex-1" />
+        <PeriodFilter value={periodState} onChange={setPeriodState} />
+        <button className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
+          style={{ background:"rgba(255,255,255,0.70)", border:"1px solid rgba(255,255,255,0.90)", color:"#999" }}
+          title="Exportar (em breve)">
+          <Download className="w-4 h-4" />
+        </button>
       </div>
 
-      {/* Report cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {reportSections[activeTab].map((section) => (
-          <GlassCard key={section.title} className="min-h-[300px] flex flex-col">
-            <h2 className="font-semibold mb-4" style={{ color: "#1A1A1A", fontSize: 18 }}>
-              {section.title}
-            </h2>
-            <div className="flex-1 flex items-center justify-center" style={{ color: "#999999", fontSize: 14 }}>
-              Dados disponíveis na próxima fase
-            </div>
-          </GlassCard>
+      {/* Tabs */}
+      <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background:"rgba(255,255,255,0.60)", border:"1px solid rgba(255,255,255,0.90)" }}>
+        {TABS.map(tab => (
+          <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+            className="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+            style={{
+              background: activeTab === tab.key ? "linear-gradient(135deg,#F0C000 0%,#C49A00 100%)" : "transparent",
+              color: activeTab === tab.key ? "#1A1A1A" : "#555555",
+              boxShadow: activeTab === tab.key ? "0 2px 8px rgba(240,192,0,0.30)" : "none",
+            }}>
+            {tab.label}
+          </button>
         ))}
       </div>
+
+      {/* Content */}
+      {activeTab === "sales" && <SalesReport periodRange={periodRange} />}
+      {activeTab === "marketing" && <MarketingReport periodRange={periodRange} />}
+      {activeTab === "support" && <SupportReport periodRange={periodRange} />}
     </div>
   );
 }

@@ -4,6 +4,7 @@ const PERIODS = [
   { key: "today", label: "Hoje" },
   { key: "week", label: "Semana" },
   { key: "month", label: "Mês" },
+  { key: "quarter", label: "Trimestre" },
   { key: "custom", label: "Personalizado" },
 ];
 
@@ -18,6 +19,11 @@ export function getPeriodRange(period, customRange) {
   }
   if (period === "month") {
     const start = new Date(now.getFullYear(), now.getMonth(), 1);
+    return { start, end: now };
+  }
+  if (period === "quarter") {
+    const start = new Date(startOfDay);
+    start.setDate(start.getDate() - 90);
     return { start, end: now };
   }
   if (period === "custom" && customRange.start && customRange.end) {

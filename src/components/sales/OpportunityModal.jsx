@@ -30,9 +30,9 @@ const FIELD = ({ label, children }) => (
 
 const inputStyle = { background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.10)", color: "#1A1A1A", fontFamily: "Inter, sans-serif", borderRadius: 10, padding: "8px 12px", width: "100%", fontSize: 14, outline: "none" };
 
-export default function OpportunityModal({ opportunity, defaultStage, onClose, onSaved }) {
+export default function OpportunityModal({ opportunity, defaultStage, defaultOrgId, onClose, onSaved }) {
   const [form, setForm] = useState({
-    title: "", organization_id: "", contact_id: "", owner_id: "",
+    title: "", organization_id: defaultOrgId || "", contact_id: "", owner_id: "",
     stage: defaultStage || "prospeccao", estimated_value: "", probability: 50,
     origin: "", expected_close_date: "", notes: "", ...opportunity,
   });

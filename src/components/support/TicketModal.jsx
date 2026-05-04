@@ -17,9 +17,9 @@ const PRIORITIES = [
 const SLA_QUICK = [4, 8, 24, 48, 72];
 const inputStyle = { background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.10)", color: "#1A1A1A", fontFamily: "Inter,sans-serif", borderRadius: 10, padding: "8px 12px", width: "100%", fontSize: 14, outline: "none" };
 
-export default function TicketModal({ ticket, onClose, onSaved }) {
+export default function TicketModal({ ticket, defaultOrgId, onClose, onSaved }) {
   const [form, setForm] = useState({
-    title: ticket?.title || "", organization_id: ticket?.organization_id || "",
+    title: ticket?.title || "", organization_id: ticket?.organization_id || defaultOrgId || "",
     contact_id: ticket?.contact_id || "", type: ticket?.type || "suporte_tecnico",
     priority: ticket?.priority || "media", module_related: ticket?.module_related || "",
     sla_hours: ticket?.sla_hours || "", description: ticket?.description || "",
