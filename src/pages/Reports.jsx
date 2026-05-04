@@ -1,77 +1,68 @@
 import React, { useState } from "react";
 import GlassCard from "@/components/ui/GlassCard";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, Megaphone, Headphones } from "lucide-react";
+
+const tabs = [
+  { key: "sales", label: "Vendas", icon: TrendingUp },
+  { key: "marketing", label: "Marketing", icon: Megaphone },
+  { key: "support", label: "Atendimento", icon: Headphones },
+];
+
+const reportSections = {
+  sales: [
+    { title: "Oportunidades por Estágio" },
+    { title: "Receita por Período" },
+  ],
+  marketing: [
+    { title: "Performance de Campanhas" },
+    { title: "Segmentos Ativos" },
+  ],
+  support: [
+    { title: "Tickets por Status" },
+    { title: "Tempo Médio de Resolução" },
+  ],
+};
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState("sales");
 
   return (
     <div className="space-y-6">
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="bg-transparent border p-1 rounded-xl" style={{ borderColor: "rgba(240,192,0,0.15)" }}>
-          <TabsTrigger value="sales" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg gap-2 text-sm">
-            <TrendingUp className="w-4 h-4" /> Vendas
-          </TabsTrigger>
-          <TabsTrigger value="marketing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg gap-2 text-sm">
-            <Megaphone className="w-4 h-4" /> Marketing
-          </TabsTrigger>
-          <TabsTrigger value="support" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg gap-2 text-sm">
-            <Headphones className="w-4 h-4" /> Atendimento
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+      {/* Tabs */}
+      <div className="flex gap-1 p-1 rounded-xl w-fit" style={{ background: "rgba(255,255,255,0.60)", border: "1px solid rgba(255,255,255,0.90)" }}>
+        {tabs.map((tab) => {
+          const active = activeTab === tab.key;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+              style={{
+                background: active ? "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)" : "transparent",
+                color: active ? "#1A1A1A" : "#555555",
+                boxShadow: active ? "0 2px 8px rgba(240,192,0,0.30)" : "none",
+              }}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
 
-      {activeTab === "sales" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <GlassCard className="min-h-[300px] flex flex-col">
-            <h2 className="text-base font-semibold text-foreground mb-4">Oportunidades por Estágio</h2>
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
+      {/* Report cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {reportSections[activeTab].map((section) => (
+          <GlassCard key={section.title} className="min-h-[300px] flex flex-col">
+            <h2 className="font-semibold mb-4" style={{ color: "#1A1A1A", fontSize: 18 }}>
+              {section.title}
+            </h2>
+            <div className="flex-1 flex items-center justify-center" style={{ color: "#999999", fontSize: 14 }}>
               Dados disponíveis na próxima fase
             </div>
           </GlassCard>
-          <GlassCard className="min-h-[300px] flex flex-col">
-            <h2 className="text-base font-semibold text-foreground mb-4">Receita por Período</h2>
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-              Dados disponíveis na próxima fase
-            </div>
-          </GlassCard>
-        </div>
-      )}
-
-      {activeTab === "marketing" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <GlassCard className="min-h-[300px] flex flex-col">
-            <h2 className="text-base font-semibold text-foreground mb-4">Performance de Campanhas</h2>
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-              Dados disponíveis na próxima fase
-            </div>
-          </GlassCard>
-          <GlassCard className="min-h-[300px] flex flex-col">
-            <h2 className="text-base font-semibold text-foreground mb-4">Segmentos Ativos</h2>
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-              Dados disponíveis na próxima fase
-            </div>
-          </GlassCard>
-        </div>
-      )}
-
-      {activeTab === "support" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <GlassCard className="min-h-[300px] flex flex-col">
-            <h2 className="text-base font-semibold text-foreground mb-4">Tickets por Status</h2>
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-              Dados disponíveis na próxima fase
-            </div>
-          </GlassCard>
-          <GlassCard className="min-h-[300px] flex flex-col">
-            <h2 className="text-base font-semibold text-foreground mb-4">Tempo Médio de Resolução</h2>
-            <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-              Dados disponíveis na próxima fase
-            </div>
-          </GlassCard>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }

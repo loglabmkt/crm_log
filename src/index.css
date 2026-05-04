@@ -8,78 +8,31 @@
   :root {
     --font-inter: 'Inter', sans-serif;
 
-    --background: 0 0% 4%;
-    --foreground: 0 0% 96%;
-    --card: 0 0% 6.7%;
-    --card-foreground: 0 0% 96%;
-    --popover: 0 0% 6.7%;
-    --popover-foreground: 0 0% 96%;
-    --primary: 46 100% 59%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 96%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 53%;
+    --background: 40 33% 96%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 46 100% 47%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 60%;
     --accent: 46 100% 47%;
-    --accent-foreground: 0 0% 4%;
+    --accent-foreground: 0 0% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 46 100% 47% / 0.15;
-    --input: 0 0% 14.9%;
-    --ring: 46 100% 59%;
-    --chart-1: 46 100% 59%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --border: 0 0% 90%;
+    --input: 0 0% 93%;
+    --ring: 46 100% 47%;
+    --chart-1: 46 100% 47%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 0 84% 60%;
+    --chart-5: 221 83% 53%;
     --radius: 1rem;
-    --sidebar-background: 0 0% 4%;
-    --sidebar-foreground: 0 0% 53%;
-    --sidebar-primary: 46 100% 59%;
-    --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 46 100% 47% / 0.12;
-    --sidebar-accent-foreground: 46 100% 59%;
-    --sidebar-border: 46 100% 47% / 0.15;
-    --sidebar-ring: 46 100% 59%;
-
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-border: rgba(240, 192, 0, 0.15);
-    --gold-glow: rgba(240, 192, 0, 0.08);
-  }
-
-  .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 96%;
-    --card: 0 0% 6.7%;
-    --card-foreground: 0 0% 96%;
-    --popover: 0 0% 6.7%;
-    --popover-foreground: 0 0% 96%;
-    --primary: 46 100% 59%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 96%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 53%;
-    --accent: 46 100% 47%;
-    --accent-foreground: 0 0% 4%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 46 100% 47% / 0.15;
-    --input: 0 0% 14.9%;
-    --ring: 46 100% 59%;
-    --chart-1: 46 100% 59%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 0 0% 4%;
-    --sidebar-foreground: 0 0% 53%;
-    --sidebar-primary: 46 100% 59%;
-    --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 46 100% 47% / 0.12;
-    --sidebar-accent-foreground: 46 100% 59%;
-    --sidebar-border: 46 100% 47% / 0.15;
-    --sidebar-ring: 46 100% 59%;
   }
 }
 
@@ -88,15 +41,29 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    background: linear-gradient(135deg, #FAF8F3 0%, #F0EBE0 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
   body {
-    @apply bg-background text-foreground font-inter;
+    font-family: var(--font-inter);
+    color: #1A1A1A;
+    background: transparent;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    background: transparent;
   }
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -104,10 +71,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(240, 192, 0, 0.25);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(240, 192, 0, 0.45);
 }

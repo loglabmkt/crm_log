@@ -8,7 +8,7 @@ export default function AppLayout() {
   const sidebarWidth = collapsed ? 64 : 240;
 
   return (
-    <div className="min-h-screen bg-background font-inter">
+    <div className="min-h-screen font-inter" style={{ background: "transparent" }}>
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <Header sidebarWidth={sidebarWidth} />
       <main
