@@ -25,10 +25,11 @@ const AuthenticatedApp = () => {
     return (
       <div className="fixed inset-0 flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FAF8F3 0%, #F0EBE0 100%)" }}>
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center"
-            style={{ background: "linear-gradient(135deg, #F0C000, #C49A00)" }}>
-            <span className="text-sm font-bold text-black">LL</span>
-          </div>
+          <img
+            src="https://media.base44.com/images/public/69f8ee9615d3f5128d9c0f57/8fcc0078f_fb3797ffe_logotipo_loglab.png"
+            alt="Log Lab"
+            className="h-10 w-auto object-contain"
+          />
           <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(240,192,0,0.2)", borderTopColor: "#F0C000" }}></div>
         </div>
       </div>

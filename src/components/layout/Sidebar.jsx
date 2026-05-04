@@ -68,15 +68,18 @@ export default function Sidebar({ collapsed, onToggle, isMobileDrawer, onClose }
     >
       {/* Logo */}
       <div className="h-16 flex items-center px-4 gap-3 flex-shrink-0 justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-bold text-xs"
-            style={{ background: "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)", color: "#1A1A1A" }}>
-            LL
-          </div>
-          {(!collapsed || isMobileDrawer) && (
-            <span className="text-base font-semibold tracking-tight truncate" style={{ color: "#1A1A1A" }}>
-              Log Lab <span style={{ color: "#F0C000" }}>CRM</span>
-            </span>
+        <div className="flex items-center justify-center flex-1">
+          {(!collapsed || isMobileDrawer) ? (
+            <img
+              src="https://media.base44.com/images/public/69f8ee9615d3f5128d9c0f57/8fcc0078f_fb3797ffe_logotipo_loglab.png"
+              alt="Log Lab"
+              className="h-10 w-auto object-contain"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-bold text-xs"
+              style={{ background: "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)", color: "#1A1A1A" }}>
+              LL
+            </div>
           )}
         </div>
         {isMobileDrawer && (
