@@ -4,8 +4,8 @@ import { base44 } from "@/api/base44Client";
 import GlassCard from "@/components/ui/GlassCard";
 import OpportunityModal from "@/components/sales/OpportunityModal";
 import ActivityModal from "@/components/sales/ActivityModal";
-import { ArrowLeft, Edit2, Phone, Mail, Globe, MessageCircle, Plus, FileText } from "lucide-react";
-import { Phone as PhoneIcon, Mail as MailIcon, Users, FileText as FileTextIcon, MessageCircle as MsgIcon, MapPin, Activity } from "lucide-react";
+import { ArrowLeft, Edit2, Phone as PhoneIcon, Mail as MailIcon, Globe, MessageCircle, MessageCircle as MsgIcon, Plus, FileText, Users, MapPin, Activity } from "lucide-react";
+const FileTextIcon = FileText;
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 

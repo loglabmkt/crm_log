@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import GlassCard from "@/components/ui/GlassCard";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Area, AreaChart } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, XAxis, YAxis, CartesianGrid, AreaChart, Area } from "recharts";
 import { Ticket, CheckCircle2, Clock, AlertTriangle } from "lucide-react";
 import { differenceInHours, differenceInDays, format, startOfWeek } from "date-fns";
 import { ptBR } from "date-fns/locale";

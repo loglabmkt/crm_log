@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import GlassCard from "@/components/ui/GlassCard";
@@ -21,6 +21,8 @@ export default function Organizations() {
   const [usersMap, setUsersMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const debounceRef = useRef(null);
   const [typeFilter, setTypeFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [sortKey, setSortKey] = useState("name");
@@ -90,7 +92,11 @@ export default function Organizations() {
         <h1 className="font-bold flex-1" style={{ color:"#1A1A1A", fontSize:28 }}>Organizações</h1>
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background:"rgba(255,255,255,0.70)", border:"1px solid rgba(255,255,255,0.90)", width:240 }}>
           <Search className="w-4 h-4 flex-shrink-0" style={{ color:"#999" }} />
-          <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} placeholder="Buscar por nome, cidade..."
+          <input value={searchInput} onChange={e => {
+            setSearchInput(e.target.value);
+            clearTimeout(debounceRef.current);
+            debounceRef.current = setTimeout(() => { setSearch(e.target.value); setPage(1); }, 300);
+          }} placeholder="Buscar por nome, cidade..."
             className="flex-1 text-sm outline-none bg-transparent" style={{ color:"#1A1A1A", fontFamily:"Inter,sans-serif" }} />
         </div>
         <button onClick={() => { setEditOrg(null); setModalOpen(true); }}

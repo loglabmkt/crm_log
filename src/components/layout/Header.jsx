@@ -16,7 +16,16 @@ const routeTitles = {
   "/support": "Atendimento",
   "/reports": "Relatórios",
   "/settings": "Configurações",
+  "/organizations": "Organizações",
 };
+
+function getTitle(pathname) {
+  if (routeTitles[pathname]) return routeTitles[pathname];
+  if (pathname.startsWith("/sales/")) return "Detalhe da Oportunidade";
+  if (pathname.startsWith("/support/")) return "Detalhe do Ticket";
+  if (pathname.startsWith("/organizations/")) return "Detalhe da Organização";
+  return "Log Lab CRM";
+}
 
 export default function Header({ sidebarWidth }) {
   const location = useLocation();
@@ -27,7 +36,7 @@ export default function Header({ sidebarWidth }) {
     base44.auth.me().then(setUser).catch(() => {});
   }, []);
 
-  const title = routeTitles[location.pathname] || "Log Lab CRM";
+  const title = getTitle(location.pathname);
   const initials = user?.full_name?.[0]?.toUpperCase() || "U";
 
   return (

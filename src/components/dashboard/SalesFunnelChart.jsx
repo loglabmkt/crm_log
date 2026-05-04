@@ -61,17 +61,17 @@ export default function SalesFunnelChart({ periodRange }) {
             <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#999", fontSize: 11 }} />
             <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} width={90} tick={{ fill: "#555", fontSize: 12 }} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(240,192,0,0.06)" }} />
-            <Bar dataKey="value" radius={[0, 6, 6, 0]} background={{ fill: "rgba(240,192,0,0.06)", radius: 6 }}>
-              {chartData.map((_, i) => (
-                <Cell key={i} fill="url(#goldGrad)" />
-              ))}
-            </Bar>
             <defs>
               <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#F0C000" />
                 <stop offset="100%" stopColor="#C49A00" />
               </linearGradient>
             </defs>
+            <Bar dataKey="value" radius={[0, 6, 6, 0]} background={{ fill: "rgba(240,192,0,0.06)", radius: 6 }}>
+              {chartData.map((_, i) => (
+                <Cell key={i} fill="url(#goldGrad)" />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       )}
