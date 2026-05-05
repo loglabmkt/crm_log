@@ -3,6 +3,16 @@ import { base44 } from "@/api/base44Client";
 import { X, Save } from "lucide-react";
 import ChanceSquares from "./ChanceSquares";
 
+const SITUACAO_LABELS = {
+  em_andamento: "Em Andamento", congelada: "Congelada", desistida: "Desistida",
+  cancelada: "Cancelada", substituida: "Substituída", vendida: "Vendida",
+};
+const ETAPA_LABELS_MAP = {
+  dimensionando: "Dimensionando", elaborando_contrato: "Elaborando Contrato",
+  elaborando_os: "Elaborando OS", executando: "Executando",
+  obtendo_aprovacoes: "Obtendo Aprovações", encerrado: "Encerrado",
+};
+
 const SITUACOES = [
   { key: "em_andamento", label: "Em Andamento" },
   { key: "congelada", label: "Congelada" },
@@ -48,10 +58,30 @@ export default function OpportunityFormModal({ opportunity, onClose, onSaved }) 
     title: "", situacao: "em_andamento", etapa: "dimensionando",
     funil: "", chance: null, owner_id: "", parceiro: "",
     tipo_negocio: "", ata_anotacoes: "", nr_contrato_os: "",
+    organization_id: "",
   });
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
   const [loadingNr, setLoadingNr] = useState(!isEdit);
+  const [users, setUsers] = useState([]);
+  const [organizations, setOrganizations] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Load users, orgs, current user
+  useEffect(() => {
+    Promise.all([
+      base44.entities.User.list(),
+      base44.entities.Organization.list(),
+      base44.auth.me(),
+    ]).then(([uList, oList, me]) => {
+      setUsers(uList);
+      setOrganizations(oList);
+      setCurrentUser(me);
+      if (!isEdit && me) {
+        setForm(f => ({ ...f, owner_id: me.id }));
+      }
+    }).catch(() => {});
+  }, []);
 
   // Load next nr on create
   useEffect(() => {
@@ -70,6 +100,7 @@ export default function OpportunityFormModal({ opportunity, onClose, onSaved }) 
         tipo_negocio: opportunity.tipo_negocio || "",
         ata_anotacoes: opportunity.ata_anotacoes || "",
         nr_contrato_os: opportunity.nr_contrato_os || "",
+        organization_id: opportunity.organization_id || "",
       });
     } else {
       setLoadingNr(true);
@@ -93,7 +124,7 @@ export default function OpportunityFormModal({ opportunity, onClose, onSaved }) 
     if (!form.situacao) e.situacao = "Obrigatório";
     if (!form.etapa) e.etapa = "Obrigatório";
     if (!form.chance) e.chance = "Obrigatório";
-    if (!form.owner_id?.trim()) e.owner_id = "Obrigatório";
+    if (!form.owner_id) e.owner_id = "Obrigatório";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -118,10 +149,39 @@ export default function OpportunityFormModal({ opportunity, onClose, onSaved }) 
       nr: Number(form.nr),
       estimated_value: Number(form.estimated_value),
       chance: Number(form.chance),
+      organization_id: form.organization_id || undefined,
     };
 
     if (isEdit) {
+      // Melhoria 5 — registrar mudanças automáticas na timeline
+      const prev = opportunity;
+      const activities = [];
+      const me = currentUser;
+      const userName = me?.full_name || "Usuário";
+
+      if (prev.situacao !== form.situacao) {
+        activities.push({
+          opportunity_id: opportunity.id,
+          user_id: me?.id,
+          type: "anotacao",
+          title: "Situação alterada",
+          description: `Situação alterada de "${SITUACAO_LABELS[prev.situacao] || prev.situacao}" para "${SITUACAO_LABELS[form.situacao] || form.situacao}" por ${userName}`,
+          occurred_at: new Date().toISOString(),
+        });
+      }
+      if (prev.etapa !== form.etapa) {
+        activities.push({
+          opportunity_id: opportunity.id,
+          user_id: me?.id,
+          type: "anotacao",
+          title: "Etapa alterada",
+          description: `Etapa alterada de "${ETAPA_LABELS_MAP[prev.etapa] || prev.etapa}" para "${ETAPA_LABELS_MAP[form.etapa] || form.etapa}" por ${userName}`,
+          occurred_at: new Date().toISOString(),
+        });
+      }
+
       await base44.entities.Opportunity.update(opportunity.id, payload);
+      await Promise.all(activities.map(a => base44.entities.Activity.create(a)));
     } else {
       await base44.entities.Opportunity.create(payload);
     }
@@ -165,12 +225,38 @@ export default function OpportunityFormModal({ opportunity, onClose, onSaved }) 
                   style={{ ...inputStyle, width: "100%" }}
                 />
               </Field>
-              <div className="col-span-1">
-                <Field label="Cliente *" error={errors.client_name}>
-                  <input value={form.client_name} onChange={e => set("client_name", e.target.value)}
-                    placeholder="Nome do cliente" style={inputStyle} />
+              <div className="col-span-2">
+                <Field label="Organização (opcional)">
+                  <div className="flex gap-2">
+                    <select
+                      value={form.organization_id}
+                      onChange={e => {
+                        const orgId = e.target.value;
+                        const org = organizations.find(o => o.id === orgId);
+                        set("organization_id", orgId);
+                        if (org) set("client_name", org.name);
+                      }}
+                      style={{ ...inputStyle, flex: 1 }}>
+                      <option value="">Selecionar organização...</option>
+                      {organizations.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
+                    </select>
+                    {form.organization_id && (
+                      <button type="button"
+                        onClick={() => set("organization_id", "")}
+                        className="px-2 rounded-lg text-xs"
+                        style={{ background: "rgba(0,0,0,0.06)", color: "#999", flexShrink: 0 }}>
+                        ✕
+                      </button>
+                    )}
+                  </div>
                 </Field>
               </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <Field label="Cliente *" error={errors.client_name}>
+                <input value={form.client_name} onChange={e => set("client_name", e.target.value)}
+                  placeholder="Nome do cliente" style={inputStyle} />
+              </Field>
               <Field label="Valor (R$) *" error={errors.estimated_value}>
                 <input type="number" min="0" step="0.01" value={form.estimated_value}
                   onChange={e => set("estimated_value", e.target.value)}
@@ -221,8 +307,10 @@ export default function OpportunityFormModal({ opportunity, onClose, onSaved }) 
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "#999" }}>Responsabilidade</p>
             <div className="grid grid-cols-3 gap-4">
               <Field label="Responsável *" error={errors.owner_id}>
-                <input value={form.owner_id} onChange={e => set("owner_id", e.target.value)}
-                  placeholder="Nome do responsável" style={inputStyle} />
+                <select value={form.owner_id} onChange={e => set("owner_id", e.target.value)} style={inputStyle}>
+                  <option value="">Selecionar...</option>
+                  {users.map(u => <option key={u.id} value={u.id}>{u.full_name}</option>)}
+                </select>
               </Field>
               <Field label="Parceiro">
                 <input value={form.parceiro} onChange={e => set("parceiro", e.target.value)}

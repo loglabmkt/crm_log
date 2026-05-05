@@ -3,9 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import GlassCard from "@/components/ui/GlassCard";
 import OpportunityFormModal from "@/components/opportunities/OpportunityFormModal";
+import ProposalModal, { PROPOSAL_STATUS_MAP } from "@/components/opportunities/ProposalModal";
 import SituacaoBadge, { ETAPA_LABELS } from "@/components/opportunities/SituacaoBadge";
 import ChanceSquares from "@/components/opportunities/ChanceSquares";
-import { ArrowLeft, Edit2, Clock, FileText, Target } from "lucide-react";
+import { ArrowLeft, Edit2, Clock, FileText, Target, Plus, Pencil, Trash2, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -25,7 +26,12 @@ export default function OpportunityDetail() {
   const [opp, setOpp] = useState(null);
   const [activities, setActivities] = useState([]);
   const [actUsers, setActUsers] = useState({});
+  const [usersMap, setUsersMap] = useState({});
+  const [orgsMap, setOrgsMap] = useState({});
+  const [proposals, setProposals] = useState([]);
   const [editModal, setEditModal] = useState(false);
+  const [proposalModal, setProposalModal] = useState(null); // null | "new" | proposal
+  const [deleteProposal, setDeleteProposal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [factText, setFactText] = useState("");
   const [savingFact, setSavingFact] = useState(false);
@@ -35,25 +41,32 @@ export default function OpportunityDetail() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const list = await base44.entities.Opportunity.filter({ id });
+    const [list, allUsers, allOrgs, propList] = await Promise.all([
+      base44.entities.Opportunity.filter({ id }),
+      base44.entities.User.list(),
+      base44.entities.Organization.list(),
+      base44.entities.Proposal.filter({ opportunity_id: id }),
+    ]);
+
     const oppData = list[0];
     if (!oppData) { setLoading(false); return; }
     setOpp(oppData);
 
-    const acts = await base44.entities.Activity.filter({ opportunity_id: id });
-    const sorted = acts.sort((a, b) =>
-      new Date(b.occurred_at || b.created_date) - new Date(a.occurred_at || a.created_date)
-    );
-    setActivities(sorted);
+    const um = {};
+    allUsers.forEach(u => { um[u.id] = u.full_name; });
+    setUsersMap(um);
+    setActUsers(um);
 
-    // Resolve user names for activities
-    const userIds = [...new Set(acts.map(a => a.user_id).filter(Boolean))];
-    if (userIds.length > 0) {
-      const allUsers = await base44.entities.User.list();
-      const map = {};
-      allUsers.forEach(u => { map[u.id] = u.full_name; });
-      setActUsers(map);
-    }
+    const om = {};
+    allOrgs.forEach(o => { om[o.id] = o; });
+    setOrgsMap(om);
+
+    setProposals(propList.sort((a, b) => new Date(b.created_date) - new Date(a.created_date)));
+
+    const acts = await base44.entities.Activity.filter({ opportunity_id: id });
+    setActivities(acts.sort((a, b) =>
+      new Date(b.occurred_at || b.created_date) - new Date(a.occurred_at || a.created_date)
+    ));
 
     setLoading(false);
   }, [id]);
@@ -128,10 +141,17 @@ export default function OpportunityDetail() {
             <div>
               <span className="text-xs" style={{ color: "#999" }}>Cliente</span>
               <p className="font-semibold mt-0.5" style={{ color: "#1A1A1A" }}>{opp.client_name || "—"}</p>
+              {opp.organization_id && orgsMap[opp.organization_id] && (
+                <button onClick={() => navigate(`/organizations/${opp.organization_id}`)}
+                  className="flex items-center gap-1 text-xs mt-1"
+                  style={{ color: "#3B82F6" }}>
+                  <ExternalLink className="w-3 h-3" /> Ver organização
+                </button>
+              )}
             </div>
             <div>
               <span className="text-xs" style={{ color: "#999" }}>Responsável</span>
-              <p className="mt-0.5" style={{ color: "#555" }}>{opp.owner_id || "—"}</p>
+              <p className="mt-0.5" style={{ color: "#555" }}>{usersMap[opp.owner_id] || opp.owner_id || "—"}</p>
             </div>
             {opp.parceiro && (
               <div>
@@ -181,6 +201,80 @@ export default function OpportunityDetail() {
             </div>
           </div>
         </div>
+      </GlassCard>
+
+      {/* Propostas */}
+      <GlassCard>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4" style={{ color: "#F0C000" }} />
+            <h3 className="font-semibold" style={{ color: "#1A1A1A", fontSize: 15 }}>Propostas</h3>
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold"
+              style={{ background: "rgba(240,192,0,0.12)", color: "#C49A00" }}>
+              {proposals.length}
+            </span>
+          </div>
+          <button onClick={() => setProposalModal("new")}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium"
+            style={{ background: "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)", color: "#1A1A1A" }}>
+            <Plus className="w-3.5 h-3.5" /> Adicionar
+          </button>
+        </div>
+
+        {proposals.length === 0 ? (
+          <p className="text-sm text-center py-6" style={{ color: "#999" }}>Nenhuma proposta cadastrada</p>
+        ) : (
+          <div className="space-y-2">
+            {proposals.map(p => {
+              const sit = PROPOSAL_STATUS_MAP[p.status];
+              return (
+                <div key={p.id} className="flex items-center gap-3 py-2.5 px-3 rounded-xl"
+                  style={{ background: "rgba(0,0,0,0.025)", border: "1px solid rgba(0,0,0,0.05)" }}>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-medium truncate" style={{ color: "#1A1A1A" }}>{p.title}</span>
+                      {sit && (
+                        <span className="px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0"
+                          style={{ background: `${sit.color}18`, color: sit.color }}>
+                          {sit.label}
+                        </span>
+                      )}
+                    </div>
+                    {p.sent_at && (
+                      <p className="text-xs mt-0.5" style={{ color: "#999" }}>
+                        Enviada em {format(new Date(p.sent_at), "dd/MM/yyyy", { locale: ptBR })}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    {p.file_url && (
+                      <a href={p.file_url} target="_blank" rel="noreferrer"
+                        className="w-7 h-7 rounded-lg flex items-center justify-center"
+                        style={{ color: "#3B82F6" }}
+                        title="Abrir documento">
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    <button onClick={() => setProposalModal(p)}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center"
+                      style={{ color: "#999" }}
+                      onMouseEnter={e => e.currentTarget.style.color = "#C49A00"}
+                      onMouseLeave={e => e.currentTarget.style.color = "#999"}>
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => setDeleteProposal(p)}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center"
+                      style={{ color: "#999" }}
+                      onMouseEnter={e => e.currentTarget.style.color = "#EF4444"}
+                      onMouseLeave={e => e.currentTarget.style.color = "#999"}>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </GlassCard>
 
       {/* Ata / Anotações */}
@@ -275,6 +369,36 @@ export default function OpportunityDetail() {
           onClose={() => setEditModal(false)}
           onSaved={load}
         />
+      )}
+
+      {proposalModal && (
+        <ProposalModal
+          proposal={proposalModal === "new" ? null : proposalModal}
+          opportunityId={id}
+          onClose={() => setProposalModal(null)}
+          onSaved={() => { setProposalModal(null); load(); }}
+        />
+      )}
+
+      {deleteProposal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.25)", backdropFilter: "blur(4px)" }}>
+          <div className="rounded-2xl p-6 w-80 space-y-4"
+            style={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(240,192,0,0.20)", boxShadow: "0 16px 48px rgba(0,0,0,0.18)" }}>
+            <p className="font-semibold" style={{ color: "#1A1A1A" }}>Excluir proposta?</p>
+            <p className="text-sm" style={{ color: "#555" }}>"{deleteProposal.title}" será removida permanentemente.</p>
+            <div className="flex gap-2">
+              <button onClick={() => setDeleteProposal(null)} className="flex-1 py-2.5 rounded-xl text-sm font-medium"
+                style={{ background: "rgba(0,0,0,0.06)", color: "#555" }}>Cancelar</button>
+              <button onClick={async () => {
+                await base44.entities.Proposal.delete(deleteProposal.id);
+                setDeleteProposal(null);
+                load();
+              }} className="flex-1 py-2.5 rounded-xl text-sm font-medium"
+                style={{ background: "#EF4444", color: "#fff" }}>Excluir</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
