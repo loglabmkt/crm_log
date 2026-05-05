@@ -14,6 +14,7 @@ import Support from '@/pages/Support';
 import Reports from '@/pages/Reports';
 import SettingsPage from '@/pages/SettingsPage';
 import OpportunityDetail from '@/pages/OpportunityDetail';
+import Contacts from '@/pages/Contacts';
 import TicketDetail from '@/pages/TicketDetail';
 import Organizations from '@/pages/Organizations';
 import OrganizationDetail from '@/pages/OrganizationDetail';
@@ -51,6 +52,7 @@ const AuthenticatedApp = () => {
         <Route path="/" element={<Dashboard />} />
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/opportunities/:id" element={<OpportunityDetail />} />
+        <Route path="/contacts" element={<Contacts />} />
         <Route path="/marketing" element={<Marketing />} />
         <Route path="/support" element={<Support />} />
         <Route path="/support/:id" element={<TicketDetail />} />

@@ -18,6 +18,7 @@ const routeTitles = {
   "/support": "Atendimento",
   "/reports": "Relatórios",
   "/settings": "Configurações",
+  "/contacts": "Painel de Contatos",
   "/organizations": "Organizações",
 };
 
