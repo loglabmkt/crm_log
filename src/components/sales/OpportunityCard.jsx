@@ -31,7 +31,7 @@ export default function OpportunityCard({ opportunity, org, owner, activities = 
 
   return (
     <div
-      onClick={() => navigate(`/sales/${opportunity.id}`)}
+      onClick={() => navigate(`/opportunities/${opportunity.id}`)}
       className="rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 group"
       style={{
         background: "rgba(255,255,255,0.70)",

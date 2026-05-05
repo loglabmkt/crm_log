@@ -40,7 +40,6 @@ export default function KpiCards({ periodRange }) {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const closedStages = ["fechado_ganho", "fechado_perdido"];
       const [opps, orgs, tickets] = await Promise.all([
         base44.entities.Opportunity.list(),
         base44.entities.Organization.list(),
@@ -53,7 +52,7 @@ export default function KpiCards({ periodRange }) {
         return d >= periodRange.start && d <= periodRange.end;
       };
 
-      const activeOpps = opps.filter(o => !closedStages.includes(o.stage) && inRange(o.opened_at));
+      const activeOpps = opps.filter(o => o.situacao === "em_andamento" && inRange(o.opened_at || o.created_date));
       const pipeline = activeOpps.reduce((s, o) => s + (o.estimated_value || 0), 0);
       const activeOrgs = orgs.filter(o => o.is_active !== false);
       const openTickets = tickets.filter(t => (t.status === "aberto" || t.status === "em_andamento") && inRange(t.created_date));

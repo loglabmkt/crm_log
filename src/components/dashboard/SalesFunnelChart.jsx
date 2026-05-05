@@ -5,11 +5,11 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 import { Target } from "lucide-react";
 
 const STAGES = [
-  { key: "prospeccao", label: "Prospecção" },
-  { key: "qualificacao", label: "Qualificação" },
-  { key: "proposta", label: "Proposta" },
-  { key: "negociacao", label: "Negociação" },
-  { key: "licitacao", label: "Licitação" },
+  { key: "em_andamento", label: "Em Andamento" },
+  { key: "congelada", label: "Congelada" },
+  { key: "desistida", label: "Desistida" },
+  { key: "cancelada", label: "Cancelada" },
+  { key: "substituida", label: "Substituída" },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -37,7 +37,7 @@ export default function SalesFunnelChart({ periodRange }) {
       };
       const counts = STAGES.map((s) => ({
         name: s.label,
-        value: opps.filter(o => o.stage === s.key && inRange(o.opened_at)).length,
+        value: opps.filter(o => o.situacao === s.key && inRange(o.opened_at || o.created_date)).length,
       }));
       setChartData(counts);
       setLoading(false);
@@ -49,7 +49,7 @@ export default function SalesFunnelChart({ periodRange }) {
 
   return (
     <GlassCard className="flex flex-col min-h-[300px]">
-      <h2 className="font-semibold mb-4" style={{ color: "#1A1A1A", fontSize: 18 }}>Funil de Vendas</h2>
+      <h2 className="font-semibold mb-4" style={{ color: "#1A1A1A", fontSize: 18 }}>Funil de Oportunidades</h2>
       {isEmpty ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-2">
           <Target className="w-10 h-10" style={{ color: "#F0C000", opacity: 0.5 }} />

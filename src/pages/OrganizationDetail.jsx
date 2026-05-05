@@ -119,7 +119,7 @@ export default function OrganizationDetail() {
             ) : (
               <div className="space-y-2">
                 {opps.map(opp => (
-                  <div key={opp.id} className="flex items-center gap-3 py-2 cursor-pointer" onClick={() => navigate(`/sales/${opp.id}`)}>
+                  <div key={opp.id} className="flex items-center gap-3 py-2 cursor-pointer" onClick={() => navigate(`/opportunities/${opp.id}`)}>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate" style={{ color:"#1A1A1A" }}>{opp.title}</p>
                       <div className="flex items-center gap-2 mt-0.5">

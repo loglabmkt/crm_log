@@ -13,7 +13,7 @@ import GlobalSearch from "./GlobalSearch";
 
 const routeTitles = {
   "/": "Dashboard",
-  "/sales": "Vendas",
+  "/opportunities": "Oportunidades",
   "/marketing": "Marketing",
   "/support": "Atendimento",
   "/reports": "Relatórios",
@@ -23,7 +23,7 @@ const routeTitles = {
 
 function getTitle(pathname) {
   if (routeTitles[pathname]) return routeTitles[pathname];
-  if (pathname.startsWith("/sales/")) return "Detalhe da Oportunidade";
+  if (pathname.startsWith("/opportunities/")) return "Detalhe da Oportunidade";
   if (pathname.startsWith("/support/")) return "Detalhe do Ticket";
   if (pathname.startsWith("/organizations/")) return "Detalhe da Organização";
   return "Log Lab CRM";

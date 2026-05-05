@@ -2,9 +2,17 @@
   "name": "Opportunity",
   "type": "object",
   "properties": {
+    "nr": {
+      "type": "number",
+      "description": "N\u00famero sequencial da oportunidade"
+    },
     "title": {
       "type": "string",
-      "description": "T\u00edtulo da oportunidade"
+      "description": "T\u00edtulo/descri\u00e7\u00e3o da oportunidade"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Nome do cliente/\u00f3rg\u00e3o em texto livre"
     },
     "organization_id": {
       "type": "string",
@@ -30,7 +38,57 @@
         "fechado_perdido"
       ],
       "default": "prospeccao",
-      "description": "Est\u00e1gio do funil de vendas"
+      "description": "Est\u00e1gio legado do funil de vendas"
+    },
+    "situacao": {
+      "type": "string",
+      "enum": [
+        "em_andamento",
+        "congelada",
+        "desistida",
+        "cancelada",
+        "substituida",
+        "vendida"
+      ],
+      "default": "em_andamento",
+      "description": "Situa\u00e7\u00e3o atual da oportunidade"
+    },
+    "etapa": {
+      "type": "string",
+      "enum": [
+        "dimensionando",
+        "elaborando_contrato",
+        "elaborando_os",
+        "executando",
+        "obtendo_aprovacoes",
+        "encerrado"
+      ],
+      "default": "dimensionando",
+      "description": "Etapa do processo"
+    },
+    "funil": {
+      "type": "string",
+      "description": "Funil de origem (texto livre)"
+    },
+    "chance": {
+      "type": "number",
+      "description": "Chance de 1 a 5"
+    },
+    "parceiro": {
+      "type": "string",
+      "description": "Nome do parceiro (opcional)"
+    },
+    "tipo_negocio": {
+      "type": "string",
+      "description": "Tipo de neg\u00f3cio (ex: Ades\u00e3o a ATA, Contrato, OS)"
+    },
+    "ata_anotacoes": {
+      "type": "string",
+      "description": "Ata e anota\u00e7\u00f5es estruturais"
+    },
+    "nr_contrato_os": {
+      "type": "string",
+      "description": "N\u00famero do contrato ou OS"
     },
     "estimated_value": {
       "type": "number",
@@ -69,7 +127,7 @@
     },
     "loss_reason": {
       "type": "string",
-      "description": "Motivo da perda (quando fechado_perdido)"
+      "description": "Motivo da perda"
     },
     "notes": {
       "type": "string",
