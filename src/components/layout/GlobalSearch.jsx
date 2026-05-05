@@ -179,7 +179,7 @@ function SearchResults({ results, query, noResults, error, onSelect }) {
             <ResultItem key={o.id} icon={<TrendingUp className="w-4 h-4" style={{ color: "#F0C000" }} />} iconBg="rgba(240,192,0,0.10)"
               title={<Highlight text={o.title} term={query} />}
               sub={[STAGE_LABELS[o.stage], o._orgName].filter(Boolean).join(" · ")}
-              onClick={() => onSelect(`/sales/${o.id}`)} />
+              onClick={() => onSelect(`/opportunities/${o.id}`)} />
           ))}
         </Section>
       )}
