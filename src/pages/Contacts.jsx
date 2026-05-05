@@ -4,7 +4,8 @@ import GlassCard from "@/components/ui/GlassCard";
 import ContactPanelModal from "@/components/contacts/ContactPanelModal";
 import ContactPanelViewModal from "@/components/contacts/ContactPanelViewModal";
 import ContactStatusBadge from "@/components/contacts/ContactStatusBadge";
-import { MapPin, MessageCircle, CheckCircle2, Target, Plus, Eye, Pencil, Trash2, Users, ChevronDown, ChevronLeft, ChevronRight, Upload } from "lucide-react";
+import OpportunityFormModal from "@/components/opportunities/OpportunityFormModal";
+import { MapPin, MessageCircle, CheckCircle2, Target, Plus, Eye, Pencil, Trash2, Users, ChevronDown, ChevronLeft, ChevronRight, Upload, TrendingUp } from "lucide-react";
 import ImportCSVModal from "@/components/contacts/ImportCSVModal";
 import { UF_LIST, STATUS_LIST } from "@/lib/ufData";
 
@@ -42,9 +43,11 @@ export default function Contacts() {
   const [loading, setLoading] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [convertContact, setConvertContact] = useState(null); // ContactPanel being converted
 
-  // Filters
-  const [search, setSearch] = useState("");
+  // Filters — read ?search= from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const [search, setSearch] = useState(urlParams.get("search") || "");
   const [searchUF, setSearchUF] = useState("");
   const [searchOrgao, setSearchOrgao] = useState("");
   const [searchStatus, setSearchStatus] = useState("");
@@ -255,13 +258,21 @@ export default function Contacts() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-1">
-                        <button onClick={() => setViewContact(c)}
-                          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-                          style={{ color: "#999" }}
-                          onMouseEnter={e => { e.currentTarget.style.background = "rgba(59,130,246,0.10)"; e.currentTarget.style.color = "#3B82F6"; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#999"; }}>
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
+                       <button onClick={() => setConvertContact(c)}
+                         className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                         style={{ color: "#999" }}
+                         title="Converter em Oportunidade"
+                         onMouseEnter={e => { e.currentTarget.style.background = "rgba(240,192,0,0.10)"; e.currentTarget.style.color = "#F0C000"; }}
+                         onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#999"; }}>
+                         <TrendingUp className="w-3.5 h-3.5" />
+                       </button>
+                       <button onClick={() => setViewContact(c)}
+                         className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+                         style={{ color: "#999" }}
+                         onMouseEnter={e => { e.currentTarget.style.background = "rgba(59,130,246,0.10)"; e.currentTarget.style.color = "#3B82F6"; }}
+                         onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#999"; }}>
+                         <Eye className="w-3.5 h-3.5" />
+                       </button>
                         <button onClick={() => setEditContact(c)}
                           className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
                           style={{ color: "#999" }}
@@ -315,10 +326,29 @@ export default function Contacts() {
           contact={viewContact}
           onClose={() => setViewContact(null)}
           onEdit={() => { setEditContact(viewContact); setViewContact(null); }}
+          onConvert={() => { setConvertContact(viewContact); setViewContact(null); }}
         />
       )}
       {importModal && (
         <ImportCSVModal onClose={() => setImportModal(false)} onImported={load} />
+      )}
+      {convertContact && (
+        <OpportunityFormModal
+          opportunity={{
+            client_name: `${convertContact.municipio} - ${convertContact.uf}`,
+            situacao: "em_andamento",
+            etapa: "dimensionando",
+          }}
+          onClose={() => setConvertContact(null)}
+          onSaved={async () => {
+            // Update contact status if lead
+            if (["lead_email", "lead_telefone"].includes(convertContact.status)) {
+              await base44.entities.ContactPanel.update(convertContact.id, { status: "proposta_enviada" });
+              load();
+            }
+            setConvertContact(null);
+          }}
+        />
       )}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"

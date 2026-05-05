@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import GlassCard from "@/components/ui/GlassCard";
 import OpportunitiesTable from "@/components/opportunities/OpportunitiesTable";
 import OpportunityFormModal from "@/components/opportunities/OpportunityFormModal";
+import ImportOpportunitiesModal from "@/components/opportunities/ImportOpportunitiesModal";
 import { SITUACAO_CONFIG } from "@/components/opportunities/SituacaoBadge";
 
 function fmtPipeline(v) {
@@ -42,6 +43,7 @@ export default function Opportunities() {
   const [situacaoFilter, setSituacaoFilter] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOpp, setEditingOpp] = useState(null);
+  const [importModal, setImportModal] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -196,6 +198,7 @@ export default function Opportunities() {
         </select>
         <div className="flex-1" />
         <button
+          onClick={() => setImportModal(true)}
           className="flex items-center gap-2 h-9 px-4 rounded-xl text-sm font-medium"
           style={{ background: "rgba(255,255,255,0.70)", border: "1px solid rgba(0,0,0,0.10)", color: "#555" }}>
           <Upload className="w-4 h-4" /> Importar CSV
@@ -245,6 +248,9 @@ export default function Opportunities() {
           onClose={() => { setModalOpen(false); setEditingOpp(null); }}
           onSaved={load}
         />
+      )}
+      {importModal && (
+        <ImportOpportunitiesModal onClose={() => setImportModal(false)} onImported={load} />
       )}
     </div>
   );

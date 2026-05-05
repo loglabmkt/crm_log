@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { X, Edit2, MapPin, Mail, Phone, Users, FileText, Calendar } from "lucide-react";
+import { X, Edit2, MapPin, Mail, Phone, Users, FileText, Calendar, TrendingUp } from "lucide-react";
 import ContactStatusBadge from "./ContactStatusBadge";
 import { REGIAO_LABELS } from "@/lib/ufData";
 import { format } from "date-fns";
@@ -33,7 +33,7 @@ function fmtPop(n) {
   return Number(n).toLocaleString("pt-BR");
 }
 
-export default function ContactPanelViewModal({ contact, onClose, onEdit }) {
+export default function ContactPanelViewModal({ contact, onClose, onEdit, onConvert }) {
   const [createdByName, setCreatedByName] = useState(null);
 
   useEffect(() => {
@@ -118,6 +118,14 @@ export default function ContactPanelViewModal({ contact, onClose, onEdit }) {
               </div>
             )}
           </div>
+
+          {onConvert && (
+            <button onClick={onConvert}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold mt-2"
+              style={{ background: "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)", color: "#1A1A1A" }}>
+              <TrendingUp className="w-4 h-4" /> Criar Oportunidade
+            </button>
+          )}
         </div>
       </div>
     </div>

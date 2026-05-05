@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Building2, TrendingUp, Headphones, X } from "lucide-react";
+import { Search, Building2, TrendingUp, Headphones, X, Users, FileText } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 const ORG_TYPE_LABELS = { prefeitura: "Prefeitura", secretaria: "Secretaria", autarquia: "Autarquia", fundacao: "Fundação", empresa_publica: "Empresa Pública", outros: "Outros" };
 const STAGE_LABELS = { prospeccao: "Prospecção", qualificacao: "Qualificação", proposta: "Proposta", negociacao: "Negociação", licitacao: "Licitação", fechado_ganho: "Ganho", fechado_perdido: "Perdido" };
 const STATUS_LABELS = { aberto: "Aberto", em_andamento: "Em andamento", aguardando_cliente: "Aguardando", resolvido: "Resolvido", arquivado: "Arquivado" };
+const CONTACT_STATUS_LABELS = { lead_email: "Lead Email", lead_telefone: "Lead Tel.", em_contato: "Em Contato", reuniao_agendada: "Reunião", proposta_enviada: "Proposta", cliente_ativo: "Cliente Ativo", inativo: "Inativo" };
+const FORM_STATUS_LABELS = { rascunho: "Rascunho", ativo: "Ativo", encerrado: "Encerrado" };
 
 function Highlight({ text, term }) {
   if (!term || !text) return <span>{text}</span>;
@@ -53,17 +55,27 @@ export default function GlobalSearch({ isMobile }) {
     setLoading(true);
     setError(false);
     const t = term.toLowerCase();
-    const [orgs, opps, tickets] = await Promise.all([
+    const [orgs, opps, tickets, contacts, forms] = await Promise.all([
       base44.entities.Organization.list(),
       base44.entities.Opportunity.list(),
       base44.entities.Ticket.list(),
+      base44.entities.ContactPanel.list(),
+      base44.entities.FormBuilder.list(),
     ]);
     const orgMap = {};
     orgs.forEach(o => { orgMap[o.id] = o; });
     const filteredOrgs = orgs.filter(o => o.name?.toLowerCase().includes(t) || o.city?.toLowerCase().includes(t)).slice(0, 4);
     const filteredOpps = opps.filter(o => o.title?.toLowerCase().includes(t)).slice(0, 4);
     const filteredTickets = tickets.filter(tk => tk.title?.toLowerCase().includes(t)).slice(0, 4);
-    setResults({ orgs: filteredOrgs, opps: filteredOpps.map(o => ({ ...o, _orgName: orgMap[o.organization_id]?.name })), tickets: filteredTickets.map(tk => ({ ...tk, _orgName: orgMap[tk.organization_id]?.name })) });
+    const filteredContacts = contacts.filter(c => c.municipio?.toLowerCase().includes(t)).slice(0, 3);
+    const filteredForms = forms.filter(f => f.title?.toLowerCase().includes(t)).slice(0, 3);
+    setResults({
+      orgs: filteredOrgs,
+      opps: filteredOpps.map(o => ({ ...o, _orgName: orgMap[o.organization_id]?.name })),
+      tickets: filteredTickets.map(tk => ({ ...tk, _orgName: orgMap[tk.organization_id]?.name })),
+      contacts: filteredContacts,
+      forms: filteredForms,
+    });
     setLoading(false);
   }, []);
 
@@ -75,7 +87,7 @@ export default function GlobalSearch({ isMobile }) {
 
   const handleSelect = (path) => { close(); navigate(path); };
 
-  const hasResults = results && (results.orgs.length > 0 || results.opps.length > 0 || results.tickets.length > 0);
+  const hasResults = results && (results.orgs.length > 0 || results.opps.length > 0 || results.tickets.length > 0 || results.contacts?.length > 0 || results.forms?.length > 0);
   const noResults = results && !hasResults;
 
   // Mobile fullscreen
@@ -190,6 +202,26 @@ function SearchResults({ results, query, noResults, error, onSelect }) {
               title={<Highlight text={t.title} term={query} />}
               sub={[STATUS_LABELS[t.status], t._orgName].filter(Boolean).join(" · ")}
               onClick={() => onSelect(`/support/${t.id}`)} />
+          ))}
+        </Section>
+      )}
+      {results.contacts?.length > 0 && (
+        <Section label="Painel de Contatos">
+          {results.contacts.map(c => (
+            <ResultItem key={c.id} icon={<Users className="w-4 h-4" style={{ color: "#22C55E" }} />} iconBg="rgba(34,197,94,0.10)"
+              title={<Highlight text={c.municipio} term={query} />}
+              sub={[CONTACT_STATUS_LABELS[c.status], c.uf].filter(Boolean).join(" · ")}
+              onClick={() => onSelect(`/contacts?search=${encodeURIComponent(c.municipio)}`)} />
+          ))}
+        </Section>
+      )}
+      {results.forms?.length > 0 && (
+        <Section label="Formulários">
+          {results.forms.map(f => (
+            <ResultItem key={f.id} icon={<FileText className="w-4 h-4" style={{ color: "#8B5CF6" }} />} iconBg="rgba(139,92,246,0.10)"
+              title={<Highlight text={f.title} term={query} />}
+              sub={[FORM_STATUS_LABELS[f.status], `${f.submissions_count || 0} respostas`].filter(Boolean).join(" · ")}
+              onClick={() => onSelect(`/forms/${f.id}/edit`)} />
           ))}
         </Section>
       )}
