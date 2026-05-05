@@ -15,6 +15,10 @@ import Reports from '@/pages/Reports';
 import SettingsPage from '@/pages/SettingsPage';
 import OpportunityDetail from '@/pages/OpportunityDetail';
 import Contacts from '@/pages/Contacts';
+import Forms from '@/pages/Forms';
+import FormEditor from '@/pages/FormEditor';
+import FormResults from '@/pages/FormResults';
+import PublicFormPage from '@/pages/PublicFormPage';
 import TicketDetail from '@/pages/TicketDetail';
 import Organizations from '@/pages/Organizations';
 import OrganizationDetail from '@/pages/OrganizationDetail';
@@ -48,11 +52,18 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      {/* Public route - no auth */}
+      <Route path="/f/:slug" element={<PublicFormPage />} />
+
       <Route element={<AppLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/opportunities" element={<Opportunities />} />
         <Route path="/opportunities/:id" element={<OpportunityDetail />} />
         <Route path="/contacts" element={<Contacts />} />
+        <Route path="/forms" element={<Forms />} />
+        <Route path="/forms/new" element={<FormEditor />} />
+        <Route path="/forms/:id/edit" element={<FormEditor />} />
+        <Route path="/forms/:id/results" element={<FormResults />} />
         <Route path="/marketing" element={<Marketing />} />
         <Route path="/support" element={<Support />} />
         <Route path="/support/:id" element={<TicketDetail />} />

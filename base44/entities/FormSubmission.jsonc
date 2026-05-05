@@ -1,0 +1,46 @@
+{
+  "name": "FormSubmission",
+  "type": "object",
+  "properties": {
+    "form_id": {
+      "type": "string",
+      "description": "ID do formul\u00e1rio vinculado"
+    },
+    "data": {
+      "type": "object",
+      "description": "Respostas do formul\u00e1rio (chave: field id, valor: resposta)"
+    },
+    "municipio": {
+      "type": "string",
+      "description": "Munic\u00edpio extra\u00eddo do campo mapeado"
+    },
+    "uf": {
+      "type": "string",
+      "description": "UF extra\u00eddo do campo mapeado"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email extra\u00eddo do campo mapeado"
+    },
+    "telefone": {
+      "type": "string",
+      "description": "Telefone extra\u00eddo do campo mapeado"
+    },
+    "nome_contato": {
+      "type": "string",
+      "description": "Nome do contato extra\u00eddo do campo mapeado"
+    },
+    "ip_address": {
+      "type": "string",
+      "description": "IP address do respondente"
+    },
+    "status_criado": {
+      "type": "boolean",
+      "default": false,
+      "description": "True quando ContactPanel foi criado automaticamente"
+    }
+  },
+  "required": [
+    "form_id"
+  ]
+}

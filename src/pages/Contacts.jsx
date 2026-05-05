@@ -4,7 +4,8 @@ import GlassCard from "@/components/ui/GlassCard";
 import ContactPanelModal from "@/components/contacts/ContactPanelModal";
 import ContactPanelViewModal from "@/components/contacts/ContactPanelViewModal";
 import ContactStatusBadge from "@/components/contacts/ContactStatusBadge";
-import { MapPin, MessageCircle, CheckCircle2, Target, Plus, Eye, Pencil, Trash2, Users, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, MessageCircle, CheckCircle2, Target, Plus, Eye, Pencil, Trash2, Users, ChevronDown, ChevronLeft, ChevronRight, Upload } from "lucide-react";
+import ImportCSVModal from "@/components/contacts/ImportCSVModal";
 import { UF_LIST, STATUS_LIST } from "@/lib/ufData";
 
 const PAGE_SIZE = 25;
@@ -56,6 +57,7 @@ export default function Contacts() {
   const [viewContact, setViewContact] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [importModal, setImportModal] = useState(false);
 
   const debounceSearch = useRef(null);
   const debounceOrgao = useRef(null);
@@ -134,11 +136,18 @@ export default function Contacts() {
           <h1 className="font-bold" style={{ color: "#1A1A1A", fontSize: 28 }}>Painel de Contatos</h1>
           <p className="mt-1 text-sm" style={{ color: "#555" }}>Gerencie seus contatos por município</p>
         </div>
-        <button onClick={() => setCreateModal(true)}
-          className="flex items-center gap-2 h-10 px-5 rounded-xl text-sm font-semibold flex-shrink-0"
-          style={{ background: "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)", color: "#1A1A1A", boxShadow: "0 2px 8px rgba(240,192,0,0.30)" }}>
-          <Plus className="w-4 h-4" /> Novo Contato
-        </button>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button onClick={() => setImportModal(true)}
+            className="flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-medium"
+            style={{ background: "rgba(255,255,255,0.70)", border: "1px solid rgba(255,255,255,0.90)", color: "#555" }}>
+            <Upload className="w-4 h-4" /> Importar CSV
+          </button>
+          <button onClick={() => setCreateModal(true)}
+            className="flex items-center gap-2 h-10 px-5 rounded-xl text-sm font-semibold"
+            style={{ background: "linear-gradient(135deg, #F0C000 0%, #C49A00 100%)", color: "#1A1A1A", boxShadow: "0 2px 8px rgba(240,192,0,0.30)" }}>
+            <Plus className="w-4 h-4" /> Novo Contato
+          </button>
+        </div>
       </div>
 
       {/* KPIs */}
@@ -307,6 +316,9 @@ export default function Contacts() {
           onClose={() => setViewContact(null)}
           onEdit={() => { setEditContact(viewContact); setViewContact(null); }}
         />
+      )}
+      {importModal && (
+        <ImportCSVModal onClose={() => setImportModal(false)} onImported={load} />
       )}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"

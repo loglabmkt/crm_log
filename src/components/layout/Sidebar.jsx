@@ -2,13 +2,14 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Target, Megaphone, Headphones,
-  BarChart2, Settings, ChevronLeft, ChevronRight, Building2, X, Users,
+  BarChart2, Settings, ChevronLeft, ChevronRight, Building2, X, Users, FileText,
 } from "lucide-react";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/opportunities", label: "Oportunidades", icon: Target },
   { path: "/contacts", label: "Painel de Contatos", icon: Users },
+  { path: "/forms", label: "Formulários", icon: FileText },
   { path: "/organizations", label: "Organizações", icon: Building2 },
   { path: "/marketing", label: "Marketing", icon: Megaphone },
   { path: "/support", label: "Atendimento", icon: Headphones },

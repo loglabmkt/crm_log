@@ -19,12 +19,16 @@ const routeTitles = {
   "/reports": "Relatórios",
   "/settings": "Configurações",
   "/contacts": "Painel de Contatos",
+  "/forms": "Formulários",
+  "/forms/new": "Novo Formulário",
   "/organizations": "Organizações",
 };
 
 function getTitle(pathname) {
   if (routeTitles[pathname]) return routeTitles[pathname];
   if (pathname.startsWith("/opportunities/")) return "Detalhe da Oportunidade";
+  if (pathname.match(/\/forms\/[^/]+\/edit/)) return "Editar Formulário";
+  if (pathname.match(/\/forms\/[^/]+\/results/)) return "Respostas";
   if (pathname.startsWith("/support/")) return "Detalhe do Ticket";
   if (pathname.startsWith("/organizations/")) return "Detalhe da Organização";
   return "Log Lab CRM";
