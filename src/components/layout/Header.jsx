@@ -110,7 +110,7 @@ export default function Header({ sidebarWidth, onMobileMenuClick }) {
               <User className="w-4 h-4" /> Perfil
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer gap-2 text-sm" style={{ color: "#555555" }}
-              onClick={() => base44.auth.logout()}>
+              onClick={() => base44.auth.logout("/login")}>
               <LogOut className="w-4 h-4" /> Sair
             </DropdownMenuItem>
           </DropdownMenuContent>

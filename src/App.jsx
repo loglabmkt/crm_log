@@ -28,15 +28,12 @@ const AuthenticatedApp = () => {
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center" style={{ background: "linear-gradient(135deg, #FAF8F3 0%, #F0EBE0 100%)" }}>
-        <div className="flex flex-col items-center gap-3">
-          <img
-            src="https://media.base44.com/images/public/69f8ee9615d3f5128d9c0f57/8fcc0078f_fb3797ffe_logotipo_loglab.png"
-            alt="Log Lab"
-            className="h-10 w-auto object-contain"
-          />
-          <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderColor: "rgba(240,192,0,0.2)", borderTopColor: "#F0C000" }}></div>
-        </div>
+      <div className="fixed inset-0 flex flex-col items-center justify-center gap-3" style={{ background: "linear-gradient(135deg, #FAF8F3 0%, #F0EBE0 100%)", fontFamily: "Inter, sans-serif" }}>
+        <div style={{ fontSize: 24, fontWeight: 800, color: "#1A1A1A", letterSpacing: "-0.5px" }}>log.lab.</div>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#F0C000", letterSpacing: "0.15em", marginBottom: 4 }}>CRM</div>
+        <div className="rounded-full" style={{ width: 32, height: 32, border: "3px solid rgba(240,192,0,0.2)", borderTop: "3px solid #F0C000", animation: "spin 0.8s linear infinite" }} />
+        <p style={{ fontSize: 13, color: "#999" }}>Carregando...</p>
+        <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
